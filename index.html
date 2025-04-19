@@ -6,101 +6,35 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Shadow Fight Lite</title>
   <link rel="icon" href="https://image.flaticon.com/icons/png/512/31/31702.png">
+  <!-- *** Ensure these paths are correct *** -->
   <link rel="stylesheet" href="frontend/assets/stylesheets/main_page.css">
   <link rel="stylesheet" href="frontend/assets/stylesheets/reset.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Oxygen:300,400" rel="stylesheet">
-  <!-- Basic Styles for Background Modal (ADD TO main_page.css later) -->
+
+  <!-- Basic Styles for Background Modal (MOVE TO main_page.css LATER) -->
   <style>
-    .background-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px; /* Increased gap */
-      padding: 20px;
-      max-height: 70vh; /* Limit height */
-      overflow-y: auto; /* Allow scrolling if needed */
-    }
-    .background-option {
-      border: 3px solid #444; /* Thicker border */
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out; /* Smoother transition */
-      background-color: #222; /* Add bg color */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow */
-    }
-    .background-option:hover {
-      transform: scale(1.05);
-      border-color: #00bcd4; /* Change hover color */
-    }
-    .background-option img {
-      width: 200px; /* Adjust size as needed */
-      height: 120px;
-      object-fit: cover;
-      display: block;
-    }
-    .background-option span {
-        display: block;
-        padding: 8px; /* More padding */
-        text-align: center; /* Center text */
-        font-size: 0.9em; /* Adjust font size */
-        color: #eee; /* Lighter text */
-    }
-    /* Style for the modal itself (similar to existing modal) */
-     .modal-background.hidden { /* Ensure hidden class works */
-        display: none;
-    }
-     .modal-background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-        display: flex; /* Use flexbox for centering */
-        justify-content: center;
-        align-items: center;
-        z-index: 100; /* Ensure it's on top */
-    }
-     .modal-child {
-        background-color: #1a1a1a; /* Darker background for the modal content */
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        max-width: 90%; /* Limit width */
-        max-height: 90%; /* Limit height */
-        overflow-y: auto; /* Scroll if content overflows */
-        position: relative; /* Needed for potential close button */
-    }
-    .modal-child h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        color: #eee;
-    }
-    /* Add a close button style (optional) */
-    .close-modal-btn {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 1.8em;
-        color: #aaa;
-        cursor: pointer;
-        background: none;
-        border: none;
-    }
-    .close-modal-btn:hover {
-        color: #fff;
-    }
+    /* ... (keep the existing modal styles) ... */
+    .background-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px; max-height: 70vh; overflow-y: auto; }
+    .background-option { border: 3px solid #444; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out; background-color: #222; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); }
+    .background-option:hover { transform: scale(1.05); border-color: #00bcd4; }
+    .background-option img { width: 200px; height: 120px; object-fit: cover; display: block; }
+    .background-option span { display: block; padding: 8px; text-align: center; font-size: 0.9em; color: #eee; }
+    .modal-background.hidden { display: none; }
+    .modal-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 100; }
+    .modal-child { background-color: #1a1a1a; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); max-width: 90%; max-height: 90%; overflow-y: auto; position: relative; }
+    .modal-child h2, .modal-child h3 { text-align: center; margin-bottom: 20px; color: #eee; } /* Applied h3 style too */
+    .close-modal-btn { position: absolute; top: 10px; right: 15px; font-size: 1.8em; color: #aaa; cursor: pointer; background: none; border: none; }
+    .close-modal-btn:hover { color: #fff; }
   </style>
   <script src="bundle.js" defer></script>
 </head>
 <body>
   <main id="root">
     <!-- Existing Demo/Help Modal -->
-    <section class="modal-background hidden" id="info-modal"> <!-- Give existing modal an ID -->
+    <section class="modal-background hidden" id="info-modal">
       <section class="modal-child">
-         <button class="close-modal-btn" onclick="closeModal('info-modal')">×</button> <!-- Add close button -->
+         <button class="close-modal-btn" onclick="closeModal('info-modal')">×</button>
         <section class="demo-open hidden">
           <div class="demo-description">
             <h2>Gameplay Demo</h2>
@@ -124,45 +58,42 @@
       </section>
     </section>
 
-    <!-- ************************************** -->
-    <!-- ***** NEW BACKGROUND SELECT MODAL ***** -->
-    <!-- ************************************** -->
+    <!-- Background Select Modal -->
     <section class="modal-background hidden" id="background-select-modal">
         <section class="modal-child">
-            <button class="close-modal-btn" onclick="closeModal('background-select-modal')">×</button> <!-- Add close button -->
-            <h2>Select Your Background</h2>
+            <button class="close-modal-btn" onclick="closeModal('background-select-modal')">×</button>
+            <h3>Select Your Background</h3> {/* Changed h2 to h3 for consistency maybe */}
             <div class="background-grid" id="backgroundGridContainer">
                 <!-- Background options will be inserted here by JavaScript -->
             </div>
         </section>
     </section>
-    <!-- ************************************** -->
-    <!-- *********** END ADDITION *********** -->
-    <!-- ************************************** -->
 
     <nav class="nav-bar-container">
       <div class="header-text">
         <h1>Shadow Fight Lite</h1>
       </div>
       <div class="icons">
-        <!-- Make icons trigger JS functions to open specific modals -->
+        <!-- Demo Icon -->
         <div class="demo-icon-container" onclick="openModal('info-modal', '.demo-open')">
           <h5>Gameplay demo</h5>
           <i class="fas fa-video fa-2x"></i>
         </div>
+        <!-- Controls Icon -->
         <div class="help-icon-container" onclick="openModal('info-modal', '.help-open')">
           <h5>Controls</h5>
           <i class="far fa-question-circle fa-2x"></i>
         </div>
 
-        <!-- ***** MODIFIED BACKGROUND SELECT ICON ***** -->
-        <!-- Remove <a> tag, add onclick to trigger modal -->
-        <div class="background-select-icon-container" onclick="openBackgroundModal()" style="cursor: pointer; margin: 0 10px; display: flex; flex-direction: column; align-items: center;">
+        <!-- ***** ALIGNED BACKGROUND SELECT ICON ***** -->
+        <!-- Use the same class as other icons and remove inline style -->
+        <div class="help-icon-container" onclick="openBackgroundModal()" style="cursor: pointer;"> <!-- Keep cursor:pointer, maybe remove others -->
           <h5>Select Background</h5>
           <i class="fas fa-image fa-2x"></i>
         </div>
-        <!-- ***** END MODIFICATION ***** -->
+        <!-- ***** END ALIGNMENT FIX ***** -->
 
+        <!-- GitHub Link -->
         <a href="https://github.com/zenitsu0509/shadow-fight-lite" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-github-square fa-2x"></i>
         </a>
@@ -176,104 +107,20 @@
   <!-- Combined Modal Logic -->
   <script>
       // --- Modal Handling ---
-      function openModal(modalId, contentSelector = null) {
-          const modal = document.getElementById(modalId);
-          if (!modal) return;
-
-          // If specific content needs to be shown (like demo vs help)
-          if (contentSelector) {
-              const modalChild = modal.querySelector('.modal-child');
-              // Hide all direct children sections first
-              modalChild.querySelectorAll(':scope > section').forEach(el => el.classList.add('hidden'));
-              // Show the specific one
-              const contentElement = modalChild.querySelector(contentSelector);
-              if (contentElement) {
-                  contentElement.classList.remove('hidden');
-              }
-          }
-           // TODO: Add game pause logic here if needed in the future
-          modal.classList.remove('hidden');
-      }
-
-      function closeModal(modalId) {
-          const modal = document.getElementById(modalId);
-          if (modal) {
-              modal.classList.add('hidden');
-               // TODO: Add game resume logic here if needed in the future
-          }
-      }
-
-       // Close modal if clicking on the background (for all modals)
-       document.querySelectorAll('.modal-background').forEach(modalBg => {
-           modalBg.addEventListener('click', (e) => {
-               if (e.target === modalBg) {
-                   closeModal(modalBg.id);
-               }
-           });
-       })
-
+      function openModal(modalId, contentSelector = null) { /* ... Keep existing JS ... */ }
+      function closeModal(modalId) { /* ... Keep existing JS ... */ }
+      document.querySelectorAll('.modal-background').forEach(modalBg => { /* ... Keep existing JS ... */ });
 
       // --- Background Selection Specific Logic ---
-      const backgrounds = [
-          { filename: 'Legion_Castle.jpg', label: 'Legion Castle' },
-          { filename: 'city-light.jpg', label: 'City Light' },
-          { filename: 'blood-moon.jpg', label: 'Blood Moon' },
-          { filename: 'cold-mountain.jpg', label: 'Cold Mountain' },
-          { filename: 'china-bg.jpg', label: 'China BG' },
-          { filename: 'light-tower.jpeg', label: 'Light Tower' },
-          { filename: 'china-temple.jpg', label: 'China Temple' }
-      ];
-      // Ensure path is correct relative to index.html
+      const backgrounds = [ /* ... Keep existing JS ... */ ];
       const backgroundImagePath = 'frontend/assets/images/';
-
       const backgroundGridContainer = document.getElementById('backgroundGridContainer');
-      let backgroundModalPopulated = false; // Flag to prevent repopulating
+      let backgroundModalPopulated = false;
+      function populateBackgroundModal() { /* ... Keep existing JS ... */ }
+      function openBackgroundModal() { /* ... Keep existing JS ... */ }
 
-      function populateBackgroundModal() {
-          if (backgroundModalPopulated || !backgroundGridContainer) return; // Only populate once
-
-          backgrounds.forEach(bg => {
-              const div = document.createElement('div');
-              div.className = 'background-option';
-              // Use the correct path
-              div.innerHTML = `
-                  <img src="${backgroundImagePath}${bg.filename}" alt="${bg.label}">
-                  <span>${bg.label}</span>
-              `;
-              div.onclick = () => {
-                  console.log(`Selected background: ${bg.filename}`); // Log selection
-                  localStorage.setItem('selectedBackground', bg.filename);
-                   // Optional: Visually indicate selection within the modal
-                   document.querySelectorAll('.background-option').forEach(opt => opt.style.borderColor = '#444');
-                   div.style.borderColor = '#0f0'; // Green border for selected
-
-                   // Close the modal after a short delay to show selection
-                   setTimeout(() => {
-                       closeModal('background-select-modal');
-                       // NOTE: Background visually updates ONLY when Level re-initializes
-                   }, 200); // 200ms delay
-              };
-              backgroundGridContainer.appendChild(div);
-          });
-          backgroundModalPopulated = true;
-      }
-
-      function openBackgroundModal() {
-          populateBackgroundModal(); // Populate if not already done
-          openModal('background-select-modal');
-      }
-
-      // Ensure game initialization logic runs after DOM is ready.
-      // If your game init is complex and inside bundle.js triggered by 'DOMContentLoaded',
-      // this inline script should generally be fine.
-       document.addEventListener('DOMContentLoaded', () => {
-           // Your game initialization from bundle.js should happen here or be triggered now.
-           // Example: if you have an initGame function exported or globally available:
-           // if (typeof window.initGame === 'function') {
-           //    window.initGame();
-           // }
-       });
-
+      // --- DOM Ready ---
+      document.addEventListener('DOMContentLoaded', () => { /* ... Keep existing JS ... */ });
   </script>
 </body>
 </html>
