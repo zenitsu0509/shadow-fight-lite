@@ -124,7 +124,7 @@ export default class Arena {
     this.ctx.canvas.addEventListener('mousedown', this.handlePlay);
 
     let background = new Image();
-    background.src = 'frontend/assets/images/start-background.jpg';
+    background.src = 'frontend/assets/images/stat-background-2.jpg';
     background.onload = () => {
       this.ctx.drawImage(background, 0, 0, this.dimensions.width, this.dimensions.height);
   
