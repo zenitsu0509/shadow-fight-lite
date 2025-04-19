@@ -366,7 +366,7 @@ export default class Level {
 
   drawBackground() {
     let background = new Image();
-    background.src = 'frontend/assets/images/game-background.jpg';
+    background.src = 'frontend/assets/images/china-bg.jpg';
     // background.onload = () => {
       this.ctx.drawImage(background, 0, 0, this.dimensions.width, this.dimensions.height);
     // }
