@@ -22,11 +22,31 @@ const LEVEL_CONSTANTS = {
   ENVIRONMENTS: ['sakura', 'snowflake']
 };
 
+// Default background if nothing is selected in localStorage
+const DEFAULT_BACKGROUND = 'china-bg.jpg';
+// Path to your background images
+const BACKGROUND_IMAGE_PATH = 'frontend/assets/images/'; // <--- Adjust this path if necessary!
+
 export default class Level {
   constructor(ctx, dimensions) {
     this.dimensions = dimensions;
     this.time = LEVEL_CONSTANTS.MAX_TIME;
     this.ctx = ctx;
+
+    // --- Background Initialization ---
+    this.backgroundImage = new Image(); // Create an Image object property
+    // Get the selected background from localStorage, or use the default
+    const selectedBackgroundFile = localStorage.getItem('selectedBackground') || DEFAULT_BACKGROUND;
+    // Set the source for the background image
+    this.backgroundImage.src = `${BACKGROUND_IMAGE_PATH}${selectedBackgroundFile}`;
+    // Optional: Add error handling in case the image fails to load
+    this.backgroundImage.onerror = () => {
+        console.error(`Failed to load background image: ${this.backgroundImage.src}`);
+        // Optionally load a fallback default image if the selected one fails
+        this.backgroundImage.src = `${BACKGROUND_IMAGE_PATH}${DEFAULT_BACKGROUND}`;
+    };
+    // --- End Background Initialization ---
+
 
     this.playerHpPos = {
       x: this.dimensions.width / 2 - LEVEL_CONSTANTS.TIMER_RADIUS,
@@ -45,13 +65,14 @@ export default class Level {
     let environmentIndex = Math.round(Math.random() * (LEVEL_CONSTANTS.ENVIRONMENTS.length - 1));
     this.environmentType = LEVEL_CONSTANTS.ENVIRONMENTS[environmentIndex];
 
+    // Binding methods - keep existing ones
     this.drawTimerCircle = this.drawTimerCircle.bind(this);
     this.drawTimerDisplay = this.drawTimerDisplay.bind(this);
     this.drawTimerText = this.drawTimerText.bind(this);
     this.drawHealthBars = this.drawHealthBars.bind(this);
     this.drawNames = this.drawNames.bind(this);
     this.drawPause = this.drawPause.bind(this);
-    this.drawBackground = this.drawBackground.bind(this);
+    this.drawBackground = this.drawBackground.bind(this); // Ensure this is bound if needed elsewhere, though likely called internally
     this.drawFloor = this.drawFloor.bind(this);
   }
 
@@ -59,7 +80,8 @@ export default class Level {
     let time;
     let winner;
 
-    this.drawBackground();
+    // *** Draw background first ***
+    this.drawBackground(); // Calls the updated drawBackground method
 
     let environmentGeneration = Math.round(Math.random() * LEVEL_CONSTANTS.ENVIRONMENT_PROBABILITY);
 
@@ -79,10 +101,10 @@ export default class Level {
     this.drawHealthBars();
     winner = this.drawCurrentHealthBars(playerHealth, botHealth);
     this.drawNames();
-    // this.drawFloor();
+    // this.drawFloor(); // Keep commented or uncomment if needed
     paused ? this.paused = true : this.paused = false;
     this.drawPause();
-      
+
     if (time === 0) {
       this.environment = [];
       return 'timeUp';
@@ -94,12 +116,37 @@ export default class Level {
     }
   }
 
+  // --- Modified drawBackground Method ---
+  drawBackground() {
+    // Check if the image has loaded (at least dimensions are available)
+    // Note: This doesn't guarantee it's fully decoded, but it's a basic check.
+    // Browsers are usually fast enough for cached/local images.
+    if (this.backgroundImage.complete && this.backgroundImage.naturalWidth !== 0) {
+         this.ctx.drawImage(
+             this.backgroundImage, // Use the pre-loaded image object
+             0,
+             0,
+             this.dimensions.width,
+             this.dimensions.height
+        );
+    } else {
+        // Optional: Draw a fallback color if the image isn't ready yet
+        // This might happen on the very first frame if loading is slow
+        this.ctx.fillStyle = COLOR_PALETTE.SECONDARY || '#294552'; // Use a fallback color
+        this.ctx.fillRect(0, 0, this.dimensions.width, this.dimensions.height);
+        // console.warn("Background image not ready, drawing fallback.");
+    }
+  }
+  // --- End Modified drawBackground Method ---
+
+
+  // ... (rest of the methods: drawTimer, drawTimerText, drawTimerCircle, etc. remain unchanged) ...
   drawTimer() {
     // TODO: Need better solution
     this.drawTimerCircle();
     this.drawTimerDisplay();
     this.drawTimerText();
-    
+
     this.time = this.time - 1;
     if (this.time === 0) {
       let returnTime = 0;
@@ -312,7 +359,7 @@ export default class Level {
       this.ctx.beginPath();
       this.ctx.fillStyle = COLOR_PALETTE.QUINTERNARY;
       this.ctx.strokeStyle = COLOR_PALETTE.PRIMARY;
-      
+
       this.ctx.rect(this.dimensions.width - 50 - 10, 25, 10, 40);
       this.ctx.fill();
       this.ctx.stroke();
@@ -364,22 +411,15 @@ export default class Level {
     };
   }
 
-  drawBackground() {
-    let background = new Image();
-    background.src = 'frontend/assets/images/china-bg.jpg';
-    // background.onload = () => {
-      this.ctx.drawImage(background, 0, 0, this.dimensions.width, this.dimensions.height);
-    // }
-  }
 
-  // TODO: Probably temporary
+  // TODO: Probably temporary floor drawing
   drawFloor() {
     this.ctx.fillStyle = 'BROWN';
     this.ctx.fillRect(
-      0, 
-      this.dimensions.height - 1, 
-      this.dimensions.width, 
-      155
+      0,
+      this.dimensions.height - 1, // Might need adjustment based on actual floor position desired
+      this.dimensions.width,
+      155 // Height of the floor area
     );
   }
 }
