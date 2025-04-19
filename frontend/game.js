@@ -124,7 +124,7 @@ export default class Arena {
     this.ctx.canvas.addEventListener('mousedown', this.handlePlay);
 
     let background = new Image();
-    background.src = 'frontend/assets/images/stat-background-2.jpg';
+    background.src = 'frontend/assets/images/Breath of the Dragon.png';
     background.onload = () => {
       this.ctx.drawImage(background, 0, 0, this.dimensions.width, this.dimensions.height);
   
@@ -139,21 +139,22 @@ export default class Arena {
       this.ctx.textAlign = 'center';
       this.ctx.fillStyle = 'WHITE';
   
-      let header = new Image();
-      header.src = 'frontend/assets/images/header-white.png';
-      header.onload = () => {
-        this.ctx.drawImage(
-          header, 
-          20, 
-          this.dimensions.height / 2 - 100, 
-          this.dimensions.width - 40, 
-          56
-        );
-      }
+      // let header = new Image();
+      // header.src = 'frontend/assets/images/header-white.png';
+      // header.onload = () => {
+      //   this.ctx.drawImage(
+      //     header, 
+      //     20, 
+      //     this.dimensions.height / 2 - 100, 
+      //     this.dimensions.width - 40, 
+      //     56
+      //   );
+      // }
   
       switch (this.winner) {
         case null:
           this.ctx.font = '56px Trebuchet MS';
+          this.ctx.fillStyle = 'black';
           this.ctx.fillText(
             'Play now!',
             this.dimensions.width / 2,
